@@ -45,25 +45,47 @@ renderRepos()
 
 })
 
-/* THEME SWITCH */
 
-const toggle = document.getElementById("themeToggle")
 
-if(localStorage.getItem("theme") === "light"){
-document.body.classList.add("light")
-toggle.textContent = "🌙"
+
+
+const canvas = document.getElementById("particles")
+const ctx = canvas.getContext("2d")
+
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
+
+let particles = []
+
+for(let i=0;i<80;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*2,
+speed:Math.random()*0.3+0.1
+})
 }
 
-toggle.addEventListener("click", () => {
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height)
 
-document.body.classList.toggle("light")
+particles.forEach(p=>{
 
-if(document.body.classList.contains("light")){
-localStorage.setItem("theme","light")
-toggle.textContent = "🌙"
-}else{
-localStorage.setItem("theme","dark")
-toggle.textContent = "☀️"
+ctx.fillStyle="rgba(255,0,0,0.7)"
+ctx.beginPath()
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2)
+ctx.fill()
+
+p.y-=p.speed
+
+if(p.y<0){
+p.y=canvas.height
+p.x=Math.random()*canvas.width
 }
 
 })
+
+requestAnimationFrame(draw)
+}
+
+draw()
